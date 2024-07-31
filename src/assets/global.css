@@ -1,0 +1,8 @@
+/* main.css */
+
+body {
+    /* Or any other selector for your container */
+    background-image: url('../assets/background.jpg');
+    /* Adjust the path as needed */
+    background-size: cover;
+}

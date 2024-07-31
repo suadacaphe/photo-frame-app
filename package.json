@@ -8,8 +8,18 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^1.7.2",
+    "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "cropperjs": "^1.6.2",
+    "face-api.js": "^0.22.2",
+    "filepond": "^4.31.1",
+    "filepond-plugin-file-validate-type": "^1.2.9",
+    "html2canvas": "^1.4.1",
+    "three": "^0.167.0",
+    "vue": "^3.2.13",
+    "vue-filepond": "^7.0.4",
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -17,8 +27,11 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "autoprefixer": "^10.4.19",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
+    "eslint-plugin-vue": "^8.0.3",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7"
   },
   "eslintConfig": {
     "root": true,
