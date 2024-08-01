@@ -39,6 +39,8 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Run Node Server
+        run: node ./my-backend/server.cjs
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
