@@ -37,20 +37,15 @@ jobs:
           cd my-backend
           npm install
           
-      - name: Build backend (if applicable)
-        run: |
-          cd my-backend
-          npm run build # Or your backend's build command
-
-      - name: Start backend server
-        run: |
-          cd my-backend
-          npm start # Start the server using the "start" script
-          
       - name: Test backend
         run: |
           cd my-backend
           npm test
+
+      - name: Start backend server (for testing purposes, optional)
+        run: |
+          cd my-backend
+          npm start  # This step is optional if you only want to test the backend
 
       # Build and deploy frontend
       - name: Install frontend dependencies
