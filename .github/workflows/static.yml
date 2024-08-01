@@ -59,11 +59,13 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-      - name : Go to Backend
-        run: cd my-backend
-      - name: Install dependencies
-        run: npm install
+      - name : Install dependencies
+        run: |
+          cd my-backend
+          npm install
       - name: Run App
-        run: node server.cjs
+        run: |
+          cd my-backend
+          node server.cjs
         
         
