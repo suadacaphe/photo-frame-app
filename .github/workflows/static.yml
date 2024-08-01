@@ -36,12 +36,17 @@ jobs:
         run: |
           cd my-backend
           npm install
-
+          
       - name: Build backend (if applicable)
         run: |
           cd my-backend
-          npm start # Or your backend's build command
+          npm run build # Or your backend's build command
 
+      - name: Start backend server
+        run: |
+          cd my-backend
+          npm start # Start the server using the "start" script
+          
       - name: Test backend
         run: |
           cd my-backend
