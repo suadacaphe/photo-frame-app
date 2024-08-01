@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Install Node Server
-        run: npm install
+        run: npm ci
       - name: Run Node Server
         run: node ./my-backend/server.cjs
       - name: Setup Pages
