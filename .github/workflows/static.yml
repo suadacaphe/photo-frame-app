@@ -66,6 +66,6 @@ jobs:
       - name: Run App
         run: |
           cd my-backend
-          node server.cjs
+          npm test
         
         
