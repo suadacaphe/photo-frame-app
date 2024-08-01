@@ -8,7 +8,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://suadacaphe.github.io/photo-frame-app/", // Replace with your Vue app's origin
+    origin: "https://suadacaphe.github.io", // Replace with your Vue app's origin
     credentials: true,
   })
 );
