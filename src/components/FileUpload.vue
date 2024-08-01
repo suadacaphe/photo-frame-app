@@ -120,14 +120,16 @@ export default {
     };
   },
   methods: {
-    handleFileUpdate(files) {
+    async handleFileUpdate(files) {
+      this.isLoading = true;
       if (files.length > 0) {
         const file = files[0].file;
-        this.uploadedImage = URL.createObjectURL(file);
+        this.uploadedImage = await URL.createObjectURL(file);
         this.showFileInput = false; // Control this flag to show/hide the file input
       } else {
         this.resetImages();
       }
+      this.isLoading = false;
     },
     cancelCropping() {
       this.uploadedImage = null;
@@ -176,7 +178,7 @@ export default {
       }
 
       const resizedImageDataUrl = await this.resizeImage(
-        this.croppedImage,
+        this.uploadedImage,
         4 * 1024 * 1024
       );
 
@@ -192,28 +194,55 @@ export default {
       this.isLoading = false;
     },
 
-    async resizeImage(imageDataUrl, maxSize) {
-      return new Promise((resolve) => {
+    async resizeImage(imageDataUrl, maxBytes) {
+      return new Promise((resolve, reject) => {
         const img = new Image();
         img.src = imageDataUrl;
-        img.onload = () => {
+        img.onload = async () => {
           const canvas = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
-          let width = img.width;
-          let height = img.height;
 
-          // Calculate new dimensions while maintaining aspect ratio
-          if (imageDataUrl.length > maxSize) {
-            const ratio = Math.sqrt(maxSize / imageDataUrl.length);
-            width = Math.floor(width * ratio);
-            height = Math.floor(height * ratio);
+          // Calculate aspect ratio and new dimensions
+          const aspectRatio = img.width / img.height;
+          let newWidth = img.width;
+          let newHeight = img.height;
+
+          // If image is too large, resize it while maintaining aspect ratio
+          if (imageDataUrl.length > maxBytes) {
+            const targetBytes = maxBytes * 0.9; // Give a little buffer to account for encoding overhead
+            const scaleFactor = Math.sqrt(targetBytes / imageDataUrl.length);
+            newWidth = Math.round(img.width * scaleFactor);
+            newHeight = Math.round(newWidth / aspectRatio);
           }
 
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+          ctx.drawImage(img, 0, 0, newWidth, newHeight);
 
-          resolve(canvas.toDataURL("image/png")); // Return the resized image data URL
+          // Try resizing with different image quality if result is still too large
+          let resizedImageDataUrl = canvas.toDataURL("image/jpeg", 0.92); // Start with high quality
+          while (
+            resizedImageDataUrl.length > maxBytes &&
+            newWidth > 100 &&
+            newHeight > 100
+          ) {
+            // Minimum size to prevent infinite loop
+            newWidth = Math.round(newWidth * 0.95);
+            newHeight = Math.round(newWidth / aspectRatio);
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+            resizedImageDataUrl = canvas.toDataURL(
+              "image/jpeg",
+              0.92 - (resizedImageDataUrl.length - maxBytes) / (10 * maxBytes)
+            ); // Adjust quality dynamically
+          }
+
+          resolve(resizedImageDataUrl);
+        };
+
+        img.onerror = (err) => {
+          reject(new Error("Failed to load image: " + err));
         };
       });
     },
@@ -221,7 +250,7 @@ export default {
     async applyYoungerEdit(prompt) {
       this.loading = true; // Show loading indicator
       var promptAdjust =
-        prompt + "make persons in picture look like 20 year old";
+        prompt + "make persons in picture look like 18 years old";
       try {
         const response = await axios.post(
           "http://localhost:3000/edit-image", // Replace with your actual backend URL
@@ -372,7 +401,7 @@ h1 {
 }
 .card {
   width: 100%; /* Ensure cards use up the full space available in the column */
-  margin: 0 auto; /* Center the card in the column if there are width constraints */
+  margin: 0 auto;
 }
 
 .container-fluid {

@@ -31,6 +31,7 @@ app.post("/edit-image", async (req, res) => {
       prompt: prompt,
       n: 1, // Number of images to generate
       size: "1024x1024", // Image size
+      style: "natural",
     });
     console.log(response);
 
@@ -79,7 +80,7 @@ app.post("/analyze-image", async (req, res) => {
           content: [
             {
               type: "text",
-              text: "what is in this image? please detail the image specialy for the person",
+              text: "I need prompt for another AI engine can create the same photo. Specialy the face should be described detail for another app can create the face can reconigze as the original photo. Just return the prompt. No yapping",
             },
             {
               type: "image_url",
