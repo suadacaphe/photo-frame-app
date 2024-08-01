@@ -60,7 +60,7 @@ jobs:
           node-version: 18
           cache: 'npm'
       - name : Go to Backend
-        run: cd ~/my-backend
+        run: cd my-backend
       - name: Install dependencies
         run: npm install
       - name: Run App
