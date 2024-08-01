@@ -8,7 +8,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "http://localhost:8080", // Replace with your Vue app's origin
+    origin: "https://suadacaphe.github.io/", // Replace with your Vue app's origin
     credentials: true,
   })
 );
