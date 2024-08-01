@@ -39,10 +39,6 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Install Node Server
-        run: npm ci
-      - name: Run Node Server
-        run: node ./my-backend/server.cjs
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
@@ -53,3 +49,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Install Node Server
+        run: npm ci
+      - name: Run Node Server
+        run: node ./my-backend/server.cjs
