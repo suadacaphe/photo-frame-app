@@ -40,7 +40,7 @@ jobs:
       - name: Build backend (if applicable)
         run: |
           cd my-backend
-          node server.cjs # Or your backend's build command
+          npm start # Or your backend's build command
 
       - name: Test backend
         run: |
