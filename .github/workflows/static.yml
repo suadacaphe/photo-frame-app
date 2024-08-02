@@ -50,21 +50,9 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  build-BE:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-          
+        
       # Build and test backend
       - name: Install backend dependencies
         run: |
