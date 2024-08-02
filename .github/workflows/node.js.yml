@@ -31,22 +31,6 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      # Build and test backend
-      - name: Install backend dependencies
-        run: |
-          cd my-backend
-          npm install
-
-      - name: Build backend (if applicable)
-        run: |
-          cd my-backend
-          npm run build # Or your backend's build command
-
-      - name: Test backend
-        run: |
-          cd my-backend
-          npm test
-
       # Build and deploy frontend
       - name: Install frontend dependencies
         run: npm ci
@@ -65,3 +49,19 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Build and test backend
+      - name: Install backend dependencies
+        run: |
+          cd my-backend
+          npm install
+
+      - name: Build backend (if applicable)
+        run: |
+          cd my-backend
+          npm run build # Or your backend's build command
+
+      - name: Test backend
+        run: |
+          cd my-backend
+          node server.cjs
