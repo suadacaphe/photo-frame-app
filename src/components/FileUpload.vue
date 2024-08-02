@@ -253,7 +253,7 @@ export default {
         prompt + "make persons in picture look like 18 years old";
       try {
         const response = await axios.post(
-          "http://localhost:3000/edit-image", // Replace with your actual backend URL
+          "https://suadacaphe.github.io:3000/edit-image", // Replace with your actual backend URL
           {
             prompt: promptAdjust,
           }
@@ -285,7 +285,7 @@ export default {
         const file = await this.toBase64(bfile); // Convert to base64
 
         const response = await axios.post(
-          "http://localhost:3000/analyze-image", // Replace with your actual backend URL
+          "https://suadacaphe.github.io:3000/analyze-image", // Replace with your actual backend URL
           {
             image: file,
           }
