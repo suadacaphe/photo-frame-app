@@ -52,15 +52,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        
-      # Build and test backend
-      - name: Install backend dependencies
-        run: |
-          cd my-backend
-          npm install
-      - name: Run Server
-        run: |
-          cd my-backend
-          node server.cjs
+
 
 
