@@ -56,9 +56,5 @@ jobs:
         run: |
           cd my-backend
           npm install
-          
-      - name: Start backend server (for testing purposes, optional)
-        run: |
-          cd my-backend
-          node server.cjs
+
 
