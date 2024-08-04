@@ -1,4 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages and testing backend
+# Simple workflow for deploying static content to GitHub Pages and testing 
 name: Deploy and Test
 
 on:
@@ -48,7 +48,10 @@ jobs:
     
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v4 
+        with:
+        # !!! Add this line !!!
+          folder: dist  
 
       - name: Checkout
         uses: actions/checkout@v4
