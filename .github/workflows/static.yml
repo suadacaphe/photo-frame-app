@@ -38,7 +38,7 @@ jobs:
       - name: Build frontend
         run: npm run build
         env:
-          BE_URL_API: ${{ secrets.BE_URL_API }}
+          VUE_APP_BE_URL_API: ${{ secrets.BE_URL_API }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
