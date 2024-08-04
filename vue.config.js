@@ -5,7 +5,7 @@ module.exports = defineConfig({
     process.env.NODE_ENV === "production"
       ? "/photo-frame-app/" // Important: Add a trailing slash!
       : "/",
-  outputDir: "docs", // Build output directory
+  outputDir: "dist", // Build output directory
 });
 // vue.config.js
 // vue.config.js
