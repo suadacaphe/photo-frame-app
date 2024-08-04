@@ -1,8 +1,10 @@
 const { defineConfig } = require("@vue/cli-service");
-module.exports = defineConfig({
-  transpileDependencies: true,
-  publicPath: "/photo-frame-app/",
-});
+module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/photo-frame-app/' // replace 'your-repo-name' with the actual name of your GitHub repository
+    : '/'
+}
+
 // vue.config.js
 // vue.config.js
 const dotenv = require("dotenv");
