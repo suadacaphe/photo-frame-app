@@ -274,7 +274,7 @@ export default {
       var promptAdjust =
         prompt +
         " The overall appearance should give the impression of a vibrant, youthful look, the person about 18 years old";
-      const BE_URL = process.env.BE_URL_API;
+      const BE_URL = process.env.VUE_APP_BE_URL_API;
       try {
         const response = await axios.post(
           `${BE_URL}/edit-image`, // Replace with your actual backend URL
@@ -310,7 +310,7 @@ export default {
         const file = await this.toBase64(bfile); // Convert to base64
 
         const response = await axios.post(
-          `${process.env.BE_URL_API}/analyze-image`, // Replace with your actual backend URL
+          `${process.env.VUE_APP_BE_URL_API}/analyze-image`, // Replace with your actual backend URL
           {
             image: file,
           }

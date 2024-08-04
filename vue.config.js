@@ -17,7 +17,7 @@ module.exports = defineConfig({
         new webpack.DefinePlugin({
           "process.env": {
             ...Object.keys(env).reduce((acc, key) => {
-              acc[`${key}`] = JSON.stringify(env[key]);
+              acc[`VUE_APP_${key}`] = JSON.stringify(env[key]);
               return acc;
             }, {}),
           },
