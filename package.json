@@ -12,6 +12,7 @@
     "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
     "cropperjs": "^1.6.2",
+    "dotenv": "^16.4.5",
     "face-api.js": "^0.22.2",
     "filepond": "^4.31.1",
     "filepond-plugin-file-validate-type": "^1.2.9",

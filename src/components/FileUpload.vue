@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
 import vueFilePond from "vue-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import "filepond/dist/filepond.min.css";
@@ -145,19 +146,40 @@ export default {
       this.resetImages();
       this.isLoading = false;
     },
-    async initializeCropper() {
-      this.loading = true;
 
-      this.$refs.image.onload;
+    async initializeCropper() {
+      if (this.cropper) {
+        this.cropper.destroy();
+        this.cropper = null;
+      }
+
+      await nextTick(); // Wait for Vue to update the DOM
+
       if (this.$refs.image) {
-        this.cropper = await new Cropper(this.$refs.image, {
+        const image = this.$refs.image;
+        console.log("Initializing cropper...");
+        this.cropper = new Cropper(image, {
           aspectRatio: 1,
           viewMode: 1,
           ready: () => {
             console.log("Cropper ready!");
+
+            const imageWidth = image.naturalWidth;
+            const imageHeight = image.naturalHeight;
+            const cropBoxSize = Math.max(imageWidth, imageHeight); // Use the larger dimension
+
+            this.cropper.setData({
+              width: cropBoxSize,
+              height: cropBoxSize,
+              x: (imageWidth - cropBoxSize) / 2,
+              y: (imageHeight - cropBoxSize) / 2,
+            });
           },
         });
+      } else {
+        console.error("Image reference is not set");
       }
+
       this.loading = false;
     },
 
@@ -250,10 +272,12 @@ export default {
     async applyYoungerEdit(prompt) {
       this.loading = true; // Show loading indicator
       var promptAdjust =
-        prompt + "make persons in picture look like 18 years old";
+        prompt +
+        " The overall appearance should give the impression of a vibrant, youthful look, the person about 18 years old";
+      const BE_URL = process.env.BE_URL_API;
       try {
         const response = await axios.post(
-          "https://photo-frame-app.onrender.com/edit-image", // Replace with your actual backend URL
+          `${BE_URL}/edit-image`, // Replace with your actual backend URL
           {
             prompt: promptAdjust,
           }
@@ -278,6 +302,7 @@ export default {
 
     async createPrompt(imageData) {
       this.loading = true; // Show loading indicator
+      console.log(process.env);
 
       try {
         const blob = await fetch(imageData).then((res) => res.blob());
@@ -285,7 +310,7 @@ export default {
         const file = await this.toBase64(bfile); // Convert to base64
 
         const response = await axios.post(
-          "https://photo-frame-app.onrender.com/analyze-image", // Replace with your actual backend URL
+          `${process.env.BE_URL_API}/analyze-image`, // Replace with your actual backend URL
           {
             image: file,
           }

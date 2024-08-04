@@ -5,10 +5,12 @@ const express = require("express");
 const fetch = require("node-fetch"); // Or use another HTTP client
 const app = express();
 const cors = require("cors");
+const vueOrigin = process.env.CORS_ORIGIN;
+console.log(vueOrigin);
 
 app.use(
   cors({
-    origin: "https://suadacaphe.github.io", // Replace with your Vue app's origin
+    origin: `${process.env.CORS_ORIGIN}`, // Replace with your Vue app's origin
     credentials: true,
   })
 );
@@ -30,8 +32,9 @@ app.post("/edit-image", async (req, res) => {
       model: "dall-e-3",
       prompt: prompt,
       n: 1, // Number of images to generate
+      quality: "hd",
       size: "1024x1024", // Image size
-      style: "natural",
+      style: "vivid",
     });
     console.log(response);
 
@@ -80,7 +83,7 @@ app.post("/analyze-image", async (req, res) => {
           content: [
             {
               type: "text",
-              text: "I need prompt for another AI engine can create the same photo. Specialy the face should be described detail for another app can create the face can reconigze as the original photo. Just return the prompt. No yapping",
+              text: "I need to create a prompt show What is in the photo.reate a prompt follow the format: Create a realistic photo {number} of persons, {number} of female or men, {nation} of person (asian if unknow nation), Specialy detail the person, face shape, accessories of the person, detail photo layout. Just return prompt no yapping",
             },
             {
               type: "image_url",
