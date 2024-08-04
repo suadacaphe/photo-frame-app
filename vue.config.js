@@ -1,7 +1,11 @@
 const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: "/photo-frame-app/",
+  publicPath:
+    process.env.NODE_ENV === "production"
+      ? "/photo-frame-app/" // Important: Add a trailing slash!
+      : "/",
+  outputDir: "docs", // Build output directory
 });
 // vue.config.js
 // vue.config.js
