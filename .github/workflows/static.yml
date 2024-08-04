@@ -48,8 +48,10 @@ jobs:
     
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
-        folder: dist 
+        uses: actions/deploy-pages@v4 
+        with:
+        # !!! Add this line !!!
+          folder: dist  
 
       - name: Checkout
         uses: actions/checkout@v4
