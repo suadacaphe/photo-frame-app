@@ -1,6 +1,6 @@
 const { defineConfig } = require("@vue/cli-service");
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'github-pages'
+  publicPath: process.env.NODE_ENV === 'production'
     ? '/photo-frame-app/' // replace 'your-repo-name' with the actual name of your GitHub repository
     : '/'
 }
