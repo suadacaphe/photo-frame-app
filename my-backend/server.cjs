@@ -6,6 +6,9 @@ const fetch = require("node-fetch"); // Or use another HTTP client
 const app = express();
 const cors = require("cors");
 const vueOrigin = process.env.CORS_ORIGIN;
+const multer = require("multer");
+const axios = require("axios");
+
 console.log(vueOrigin);
 
 app.use(
@@ -18,6 +21,133 @@ app.use(
 app.use(express.json({ limit: "50mb" })); // or any other appropriate limit
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
+
+const VANCEAI_API_KEY = process.env.VANCEAI_API_KEY;
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.post("/upload-image", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      throw new Error("No file uploaded");
+    }
+    const fileBlob = new Blob([req.file.buffer], { type: req.file.mimetype });
+    const formData = new FormData();
+    formData.append("api_token", VANCEAI_API_KEY);
+    formData.append("file", fileBlob, req.file.originalname); // Use file buffer directly with filename and
+    console.log(formData);
+
+    const response = await axios.post(
+      "https://api-service.vanceai.com/web_api/v1/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log(response);
+
+    if (response.data.code !== 200) {
+      throw new Error(`VanceAI API upload error: ${response}`);
+    }
+
+    res.json({ uid: response.data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/process-image", async (req, res) => {
+  try {
+    const { uid } = req.body;
+
+    const jconfig = {
+      name: "img2anime",
+      config: {
+        module: "img2anime",
+        module_params: {
+          model_name: "style1",
+          description: "around 20 years old",
+          control_mode: 0,
+          style_strength: 11,
+        },
+      },
+    };
+
+    const config = JSON.stringify(jconfig);
+
+    const response = await axios.post(
+      "https://api-service.vanceai.com/web_api/v1/transform",
+      {
+        api_token: VANCEAI_API_KEY,
+        uid: uid,
+        jconfig: config, // No need to stringify with axios
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    console.log(response.data); // Handle the respons
+
+    res.json({ transId: response.data.data.trans_id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/poll-status", async (req, res) => {
+  try {
+    const { transId } = req.query;
+
+    const statusResponse = await fetch(
+      `https://api-service.vanceai.com/web_api/v1/transform_status?api_token=${VANCEAI_API_KEY}&trans_id=${transId}`
+    );
+    const statusData = await statusResponse.json();
+
+    if (statusData.code !== 200) {
+      throw new Error(`VanceAI API status error: ${statusData.code}`);
+    }
+
+    res.json(statusData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Download Image
+app.post("/download-image", async (req, res) => {
+  try {
+    const { transId } = req.body;
+
+    const downloadResponse = await fetch(
+      "https://api-service.vanceai.com/web_api/v1/download",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          api_token: VANCEAI_API_KEY,
+          trans_id: transId,
+        }),
+      }
+    );
+    console.log(downloadResponse);
+    const imageBuffer = await downloadResponse.arrayBuffer();
+
+    res.json({ image: Buffer.from(imageBuffer).toString("base64") });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.post("/edit-image", async (req, res) => {
   try {
@@ -111,31 +241,8 @@ app.post("/analyze-image", async (req, res) => {
     res.status(500).json({ error: "Failed to analyze image" });
   }
 });
-// function dataURLtoFile(dataurl, filename) {
-//   var arr = dataurl.split(","),
-//     mime = arr[0].match(/:(.*?);/)[1],
-//     bstr = atob(arr[1]),
-//     n = bstr.length,
-//     u8arr = new Uint8Array(n);
 
-//   while (n--) {
-//     u8arr[n] = bstr.charCodeAt(n);
-//   }
-
-//   return new File([u8arr], filename, { type: mime });
-// }
-
-// Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:8080"); // Replace with your frontend's origin
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });

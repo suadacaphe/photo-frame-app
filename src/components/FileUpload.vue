@@ -200,12 +200,12 @@ export default {
       }
 
       const resizedImageDataUrl = await this.resizeImage(
-        this.uploadedImage,
+        this.croppedImage,
         4 * 1024 * 1024
       );
 
       try {
-        await this.createPrompt(resizedImageDataUrl);
+        await this.applyCartoonEdit(resizedImageDataUrl);
       } catch (error) {
         console.error("Error applying edit:", error);
         // Handle the error, e.g., show an error message to the user
@@ -267,6 +267,89 @@ export default {
           reject(new Error("Failed to load image: " + err));
         };
       });
+    },
+
+    async uploadImage(imageDataUrl) {
+      const BE_URL = process.env.VUE_APP_BE_URL_API;
+      const file = this.dataURLtoFile(imageDataUrl, "image.jpg");
+      const formData = new FormData();
+      formData.append("image", file, file.name); // Append the File object with its name
+      const response = await axios.post(`${BE_URL}/upload-image`, formData, {});
+
+      if (response.data.uid) {
+        console.log(response);
+        return response.data.uid.data.uid;
+      } else {
+        throw new Error("Image upload failed");
+      }
+    },
+
+    async processImage(uid) {
+      const BE_URL = process.env.VUE_APP_BE_URL_API;
+
+      const response = await axios.post(`${BE_URL}/process-image`, {
+        uid: uid,
+      });
+
+      if (response.data && response.data.transId) {
+        console.log(response);
+        return response.data.transId;
+      } else {
+        throw new Error("Image processing failed");
+      }
+    },
+
+    async downloadProcessedImage(transId) {
+      const BE_URL = process.env.VUE_APP_BE_URL_API;
+
+      const response = await axios.post(`${BE_URL}/download-image`, {
+        transId: transId,
+      });
+
+      if (response.data && response.data.image) {
+        return `data:image/jpeg;base64,${response.data.image}`;
+      } else {
+        throw new Error("Image download failed");
+      }
+    },
+
+    async applyCartoonEdit(imageData) {
+      this.isLoading = true; // Show loading indicator
+      try {
+        const uid = await this.uploadImage(imageData);
+        const transId = await this.processImage(uid);
+
+        if (transId) {
+          // Polling the status
+          //const cartoonizedImageUrl = await this.pollStatus(transId);
+
+          // Fetch the cartoonized image data
+          const downloadedImageUrl = await this.downloadProcessedImage(transId);
+
+          this.editedImage = downloadedImageUrl;
+          await this.createFramedPhoto();
+        } else {
+          console.error("Error: No transform ID found in the response.");
+          this.isLoading = false;
+        }
+      } catch (error) {
+        console.error("Error applying cartoon edit:", error);
+        this.isLoading = false;
+      }
+    },
+
+    dataURLtoBlob(dataurl) {
+      const arr = dataurl.split(",");
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new Blob([u8arr], { type: mime });
     },
 
     async applyYoungerEdit(prompt) {
@@ -361,7 +444,7 @@ export default {
       if (!this.faceDetected || !this.useAIConvert) {
         image.src = this.editedImage;
       } else {
-        image.src = `data:image/png;base64,${this.editedImage}`; // Use the edited image URL directly
+        image.src = this.editedImage; // Use the edited image URL directly
       }
 
       const frame = new Image();
