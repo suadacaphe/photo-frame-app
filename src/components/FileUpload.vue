@@ -2,8 +2,14 @@
   <div class="loading-overlay" v-if="isLoading">
     <img src="@/assets/loading.gif" alt="Loading..." />
   </div>
-  <div class="container-fluid h-100">
-    <h1 class="text-center mb-4">AI Convert Tool</h1>
+  <div class="container-fluid h-100 mt-3">
+    <h1 class="text-center mb-3 text-white text-3xl">AI NEW AVATAR</h1>
+
+    <div>
+      <p class="text-white text-ellipsis hover:shadow-lg shadow-black text-xl">Hãy cùng Rubik “bắt trọn” tuổi 19 với minigame <span class="font-bold decoration-sky-500">[AI NEW AVATAR, RINH QUÀ THẢ GA]</span> nhé.</p>
+      <p class="text-white text-ellipsis hover:shadow-lg shadow-black text-xl">Các fans sẽ có cơ hội nhận được voucher VINID với tổng giải thưởng gần 4 triệu đồng!</p>
+    </div>
+
     <div class="row justify-content-center align-items-center h-100">
       <!-- Upload Section -->
       <div class="col-md-6">
@@ -89,12 +95,22 @@
       </div>
     </div>
   </div>
+
+  <ModalComponent :show="isModalOpen" @close="closeModal">
+      <h2 class="text-xl font-bold mb-4">Lời chúc</h2>
+      <div class="text-center">
+        <p>Chúc mừng bạn đã "bắt trọn" tuổi 19 thành công.</p>
+        <p>Hãy lan tỏa minigame này đến nhiều người bạn của mình hơn nhé!</p>
+      </div>
+      
+    </ModalComponent>
 </template>
 
 <script>
 import { nextTick } from "vue";
 import vueFilePond from "vue-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import ModalComponent from "./ModalComponent.vue";
 import "filepond/dist/filepond.min.css";
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.min.css";
@@ -103,6 +119,7 @@ import axios from "axios";
 export default {
   components: {
     FilePond: vueFilePond(FilePondPluginFileValidateType),
+    ModalComponent,
   },
   data() {
     return {
@@ -118,6 +135,7 @@ export default {
       faceDetected: true,
       isPrompt: false,
       useAIConvert: false,
+      isModalOpen: false,
     };
   },
   methods: {
@@ -479,6 +497,7 @@ export default {
         link.click();
         document.body.removeChild(link);
       }
+      this.openModal();
     },
     resetImages() {
       this.uploadedImage = null;
@@ -490,6 +509,13 @@ export default {
       }
       this.showFileInput = true;
     },
+
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    }
   },
 };
 </script>
