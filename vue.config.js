@@ -4,7 +4,7 @@ const webpack = require("webpack");
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: process.env.NODE_ENV === "production" ? "/photo-frame-app/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   outputDir: "dist",
 
   // Combine configureWebpack into the main object:
