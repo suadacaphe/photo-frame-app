@@ -68,7 +68,7 @@ app.post("/process-image", async (req, res) => {
       config: {
         module: "img2anime",
         module_params: {
-          model_name: "style1",
+          model_name: "style4",
           description: "around 20 years old",
           control_mode: 0,
           style_strength: 11,
