@@ -134,7 +134,7 @@ export default {
       isLoading: false,
       faceDetected: true,
       isPrompt: false,
-      useAIConvert: false,
+      useAIConvert: true,
       isModalOpen: false,
     };
   },
