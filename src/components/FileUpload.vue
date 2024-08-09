@@ -2,15 +2,15 @@
   <div class="loading-overlay" v-if="isLoading">
     <img src="@/assets/loading.gif" alt="Loading..." />
   </div>
-  <div class="container-fluid h-100 mt-3">
+  <div class="container-fluid h-100 mt-5">
     <h1 class="text-center mb-3 text-white text-3xl">AI NEW AVATAR</h1>
 
-    <div>
+    <div class="mt-5">
       <p class="text-white text-ellipsis hover:shadow-lg shadow-black text-xl">Hãy cùng Rubik “bắt trọn” tuổi 19 với minigame <span class="font-bold decoration-sky-500">[AI NEW AVATAR, RINH QUÀ THẢ GA]</span> nhé.</p>
       <p class="text-white text-ellipsis hover:shadow-lg shadow-black text-xl">Các fans sẽ có cơ hội nhận được voucher VINID với tổng giải thưởng gần 4 triệu đồng!</p>
     </div>
 
-    <div class="row justify-content-center align-items-center h-100">
+    <div class="row justify-content-center h-100" style="margin-top: 100px;">
       <!-- Upload Section -->
       <div class="col-md-6">
         <div class="card shadow-sm mb-0">
